@@ -1,0 +1,127 @@
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  default: standard # errcheck, govet, ineffassign, staticcheck, unused
+  enable:
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - copyloopvar
+    - dupword
+    - durationcheck
+    - errname
+    - errorlint
+    - exhaustive
+    - contextcheck
+    - forbidigo
+    - forcetypeassert
+    - gocritic
+    - gosec
+    - intrange
+    - misspell
+    - modernize
+    - nakedret
+    - nilerr
+    - noctx
+    - nolintlint
+    - perfsprint
+    - predeclared
+    - recvcheck
+    - revive
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - usetesting
+    - wastedassign
+    - whitespace
+  settings:
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment # struct field order stays readable, not packed
+    exhaustive:
+      default-signifies-exhaustive: false
+    forbidigo:
+      forbid:
+        - pattern: ^(fmt\.Print(|f|ln)|print|println)$
+          msg: library code does not write to stdout or stderr; return the error
+        - pattern: ^log\.(Print|Fatal|Panic).*$
+          msg: library code does not write to the process-wide logger
+    nakedret:
+      max-func-lines: 0 # no naked returns at all, as in docker/cli
+    gosec:
+      excludes:
+        - G115 # integer conversions: the wire protocol fixes the widths (excluded by caddy, gin and docker/cli too)
+        - G404 # math/rand/v2 is used for backoff jitter, not for secrets
+        - G704 # SSRF taint: every URL is a constant Google endpoint
+    perfsprint:
+      int-conversion: true
+      err-error: true
+      errorf: true
+      sprintf1: true
+      strconcat: true
+    revive:
+      rules:
+        - name: blank-imports
+        - name: bool-literal-in-expr
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: early-return
+        - name: error-naming
+        - name: error-return
+        - name: error-strings
+        - name: errorf
+        - name: exported
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: redefines-builtin-id
+        - name: superfluous-else
+        - name: time-naming
+        - name: unexported-return
+        - name: unreachable-code
+        - name: unused-parameter
+        - name: use-any
+        - name: var-declaration
+        - name: var-naming
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: _test\.go$
+        linters:
+          - errcheck
+          - unparam
+    paths:
+      - internal/pb
+    warn-unused: true
+
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gofumpt:
+      module-path: github.com/SteveNgepi/fcmandroid
+    goimports:
+      local-prefixes:
+        - github.com/SteveNgepi/fcmandroid
+  exclusions:
+    generated: lax
+    paths:
+      - internal/pb
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

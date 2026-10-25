@@ -1,0 +1,24 @@
+# registered devices: security tokens and FCM tokens
+clients/
+_future
+
+# keys and app configs
+serviceAccount.json
+google-services.json
+.env
+!.env.example
+
+# listener output, logs, dumps
+*.jsonl
+*.log
+*.sql
+
+# editor, OS, local tooling
+.idea/
+.DS_Store
+.claude/
+
+# not published yet
+_future/
+CLAUDE.md
+documents/
